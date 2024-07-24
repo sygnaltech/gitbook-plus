@@ -326,24 +326,15 @@
               if (headerElement) {
                 if (!headerElement.querySelector('a[href="https://example.com"]')) {
                   const headingTitle = this.findGroupHeading() || "Sync ToC";
+                  this.syncToC();
                   const linkElement = document.createElement("a");
                   linkElement.href = "https://example.com";
-                  linkElement.textContent = "<< " + headingTitle;
+                  linkElement.textContent = headingTitle;
                   headerElement.prepend(linkElement);
                   console.log("Link added to header!");
                   linkElement.addEventListener("click", (event) => {
                     event.preventDefault();
-                    const scrollContainer = document.querySelector("aside.relative.group > div");
-                    console.log(scrollContainer);
-                    const selectedItem = scrollContainer == null ? void 0 : scrollContainer.querySelector(".text-primary");
-                    console.log(selectedItem);
-                    if (selectedItem && scrollContainer) {
-                      const elementTop = selectedItem.offsetTop - 200;
-                      scrollContainer.scrollTo({
-                        top: elementTop,
-                        behavior: "smooth"
-                      });
-                    }
+                    this.syncToC();
                   });
                 }
               }
@@ -393,6 +384,19 @@
         console.log("No parent UL found for the selected item");
       }
       return void 0;
+    }
+    syncToC() {
+      const scrollContainer = document.querySelector("aside.relative.group > div");
+      console.log(scrollContainer);
+      const selectedItem = scrollContainer == null ? void 0 : scrollContainer.querySelector(".text-primary");
+      console.log(selectedItem);
+      if (selectedItem && scrollContainer) {
+        const elementTop = selectedItem.offsetTop - 200;
+        scrollContainer.scrollTo({
+          top: elementTop,
+          behavior: "smooth"
+        });
+      }
     }
   };
 

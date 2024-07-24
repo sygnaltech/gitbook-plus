@@ -41,10 +41,12 @@ const observer = new MutationObserver((mutations) => {
 
             const headingTitle = this.findGroupHeading() || "Sync ToC"; 
 
+            this.syncToC(); 
+
 
             const linkElement = document.createElement('a');
             linkElement.href = 'https://example.com';
-            linkElement.textContent = '<< ' + headingTitle;
+            linkElement.textContent = headingTitle;
             headerElement.prepend(linkElement);
             console.log('Link added to header!'); 
 
@@ -56,34 +58,8 @@ const observer = new MutationObserver((mutations) => {
 
 
 
+              this.syncToC(); 
 
-
-                // Select the container of the scrollable area
-                const scrollContainer = document.querySelector<HTMLElement>('aside.relative.group > div'); // Adjust selector as needed
-                console.log(scrollContainer); 
-
-                const selectedItem = scrollContainer?.querySelector<HTMLElement>('.text-primary');
-console.log(selectedItem); 
-
-                if (selectedItem && scrollContainer) {
-                  // Calculate the top position of the element within the container
-                  const elementTop = selectedItem.offsetTop - 200; // 200px offset
-                  
-                  // Scroll to the element with the offset
-                  scrollContainer.scrollTo({
-                    top: elementTop,
-                    behavior: 'smooth'
-                  });
-                }
-
-              // // Find the navigation item with the class 'text-primary'
-              // const selectedItem = document.querySelector('.text-primary');
-              // if (selectedItem) {
-              //   // Scroll to the navigation item
-              //   selectedItem.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-
-              // }
             }); 
 
           }
@@ -172,5 +148,29 @@ observer.observe(document.body, config);
 
       return undefined;  
   }
+
+  syncToC() {
+    
+
+                // Select the container of the scrollable area
+                const scrollContainer = document.querySelector<HTMLElement>('aside.relative.group > div'); // Adjust selector as needed
+                console.log(scrollContainer); 
+
+                const selectedItem = scrollContainer?.querySelector<HTMLElement>('.text-primary');
+console.log(selectedItem); 
+
+                if (selectedItem && scrollContainer) {
+                  // Calculate the top position of the element within the container
+                  const elementTop = selectedItem.offsetTop - 200; // 200px offset
+                  
+                  // Scroll to the element with the offset
+                  scrollContainer.scrollTo({
+                    top: elementTop,
+                    behavior: 'smooth'
+                  });
+                }
+
+  }
+
 
 }
