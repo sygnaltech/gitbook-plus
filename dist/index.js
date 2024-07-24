@@ -336,11 +336,26 @@
               const headerElement = mainElement.querySelector("header");
               if (headerElement) {
                 if (!headerElement.querySelector('a[href="https://example.com"]')) {
+                  const headingTitle = this.findGroupHeading() || "Sync ToC";
                   const linkElement = document.createElement("a");
                   linkElement.href = "https://example.com";
-                  linkElement.textContent = "Click here";
+                  linkElement.textContent = "<< " + headingTitle;
                   headerElement.prepend(linkElement);
                   console.log("Link added to header!");
+                  linkElement.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    const scrollContainer = document.querySelector("aside.relative.group > div");
+                    console.log(scrollContainer);
+                    const selectedItem = scrollContainer == null ? void 0 : scrollContainer.querySelector(".text-primary");
+                    console.log(selectedItem);
+                    if (selectedItem && scrollContainer) {
+                      const elementTop = selectedItem.offsetTop - 200;
+                      scrollContainer.scrollTo({
+                        top: elementTop,
+                        behavior: "smooth"
+                      });
+                    }
+                  });
                 }
               }
             }
@@ -368,6 +383,27 @@
       } else {
         console.log("No main element found on the page.");
       }
+    }
+    findGroupHeading() {
+      var _a, _b;
+      const selectedItem = document.querySelector(".text-primary");
+      if (!selectedItem) {
+        console.log("Selected item not found");
+        return void 0;
+      }
+      let parent = selectedItem.closest("ul");
+      if (parent) {
+        const previousHeading = parent.previousElementSibling;
+        if (previousHeading && previousHeading.classList.contains("px-5")) {
+          console.log("Group heading found:", (_a = previousHeading.textContent) == null ? void 0 : _a.trim());
+          return (_b = previousHeading.textContent) == null ? void 0 : _b.trim();
+        } else {
+          console.log("No group heading found");
+        }
+      } else {
+        console.log("No parent UL found for the selected item");
+      }
+      return void 0;
     }
   };
 

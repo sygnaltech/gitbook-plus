@@ -37,12 +37,55 @@ const observer = new MutationObserver((mutations) => {
         if (headerElement) {
           // Check if the link is already there to avoid duplicates
           if (!headerElement.querySelector('a[href="https://example.com"]')) {
+
+
+            const headingTitle = this.findGroupHeading() || "Sync ToC"; 
+
+
             const linkElement = document.createElement('a');
             linkElement.href = 'https://example.com';
-            linkElement.textContent = 'Click here';
+            linkElement.textContent = '<< ' + headingTitle;
             headerElement.prepend(linkElement);
             console.log('Link added to header!'); 
-            // .text-primary
+
+            // .text-primary 
+
+            // Add click event listener to link
+            linkElement.addEventListener('click', (event) => {
+              event.preventDefault(); // Prevent default link behavior
+
+
+
+
+
+                // Select the container of the scrollable area
+                const scrollContainer = document.querySelector<HTMLElement>('aside.relative.group > div'); // Adjust selector as needed
+                console.log(scrollContainer); 
+
+                const selectedItem = scrollContainer?.querySelector<HTMLElement>('.text-primary');
+console.log(selectedItem); 
+
+                if (selectedItem && scrollContainer) {
+                  // Calculate the top position of the element within the container
+                  const elementTop = selectedItem.offsetTop - 200; // 200px offset
+                  
+                  // Scroll to the element with the offset
+                  scrollContainer.scrollTo({
+                    top: elementTop,
+                    behavior: 'smooth'
+                  });
+                }
+
+              // // Find the navigation item with the class 'text-primary'
+              // const selectedItem = document.querySelector('.text-primary');
+              // if (selectedItem) {
+              //   // Scroll to the navigation item
+              //   selectedItem.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+
+              // }
+            }); 
+
           }
         }
       }
@@ -100,6 +143,34 @@ observer.observe(document.body, config);
       }
     }
 
+    findGroupHeading(): string | undefined {
+      // Find the selected item with the class text-primary
+      const selectedItem = document.querySelector('.text-primary') as HTMLElement;
 
+      if (!selectedItem) {
+          console.log('Selected item not found');
+          return undefined;
+      }
+
+      // Traverse up to find the closest parent UL element
+      let parent = selectedItem.closest('ul');
+
+      if (parent) {
+          // Get the previous element which is assumed to be the heading container
+          const previousHeading = parent.previousElementSibling as HTMLElement;
+
+          // Validate if the found element is the heading
+          if (previousHeading && previousHeading.classList.contains('px-5')) {
+              console.log('Group heading found:', previousHeading.textContent?.trim());
+              return previousHeading.textContent?.trim(); 
+          } else {
+              console.log('No group heading found');
+          }
+      } else {
+          console.log('No parent UL found for the selected item');
+      }
+
+      return undefined;  
+  }
 
 }
