@@ -327,6 +327,47 @@
       Page.loadEngineCSS("site.css");
     }
     exec() {
+      console.log("test");
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.type === "childList") {
+            const mainElement = document.querySelector("main");
+            if (mainElement) {
+              const headerElement = mainElement.querySelector("header");
+              if (headerElement) {
+                if (!headerElement.querySelector('a[href="https://example.com"]')) {
+                  const linkElement = document.createElement("a");
+                  linkElement.href = "https://example.com";
+                  linkElement.textContent = "Click here";
+                  headerElement.prepend(linkElement);
+                  console.log("Link added to header!");
+                }
+              }
+            }
+          }
+        });
+      });
+      const config = { childList: true, subtree: true };
+      observer.observe(document.body, config);
+    }
+    prependLinkToHeader() {
+      const mainElement = document.querySelector("main");
+      if (mainElement) {
+        const headerElement = mainElement.querySelector("header");
+        if (headerElement) {
+          const linkElement = document.createElement("a");
+          linkElement.href = "https://example.com";
+          linkElement.textContent = "Click here";
+          console.log("creating link");
+          console.log(headerElement);
+          console.log(headerElement.firstChild);
+          headerElement.prepend(linkElement);
+        } else {
+          console.log("No header element found inside the main element.");
+        }
+      } else {
+        console.log("No main element found on the page.");
+      }
     }
   };
 
